@@ -1,0 +1,63 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checker
+.mypy_cache/
+
+# Linter
+.ruff_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# SQLite databases
+*.sqlite3
+*.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Secrets / keys
+*.pem
+*.key
+*.crt
+
+# Local configuration
+config.local.py
+settings.local.py

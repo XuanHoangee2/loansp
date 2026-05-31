@@ -8,22 +8,29 @@ project_name = "loansp-ai"
 list_of_file = [
     f"{project_name}/backend/app/api/chat.py",
     f"{project_name}/backend/app/api/loan.py",
+    f"{project_name}/backend/app/api/web_html.py",
+    f"{project_name}/backend/app/api/health_check.py",
     f"{project_name}/backend/app/modules/conversation/grok_client.py",
     f"{project_name}/backend/app/modules/conversation/prompt_template.py",
+    f"{project_name}/backend/app/modules/embeddings/embeddings_layer.py",
     f"{project_name}/backend/app/modules/financial_engine/formulas.py",
+    f"{project_name}/backend/app/schemas/chat_schema.py",
     f"{project_name}/backend/app/database/session.py",
     f"{project_name}/backend/app/core/config/config.py",
     f"{project_name}/backend/app/core/logging/log.py",
     f"{project_name}/backend/main.py",
-    f"{project_name}/frontend/public/index.html",
-    f"{project_name}/frontend/src/components/Chatbot.jsx",
-    f"{project_name}/frontend/src/components/ChatMessage.jsx",
-    f"{project_name}/frontend/src/services/api.js",
-    f"{project_name}/frontend/src/hooks/useChatbot.js",
+    f"{project_name}/backend/src/static/style.css",
+    f"{project_name}/backend/src/index.html",
     f"{project_name}/docs/CONTEXT.md",
-    f"{project_name}/docs/BACKEND.md",
-    f"{project_name}/docs/FRONTEND.md",
-    "requirements.txt"
+    f"{project_name}/Dockerfile",
+    f"{project_name}/requirements.txt",
+    f"{project_name}/.dockerignore",
+    f"{project_name}/docker-compose.yml",
+    f"{project_name}/.github/workflows/ci.yml",
+    "requirements.txt",
+    ".env",
+    ".gitignore",
+
 ]
 
 for filepath in list_of_file:
