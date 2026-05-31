@@ -1,0 +1,185 @@
+# ====================
+# Python & Cache
+# ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+
+# ====================
+# IDE & Editors
+# ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+.idea/
+*.sublime-*
+.project
+.pydevproject
+
+# ====================
+# Git & Version Control
+# ====================
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+.gitconfig
+
+# ====================
+# Logs & Temporary files
+# ====================
+*.log
+logs/
+*.tmp
+*.temp
+tmp/
+temp/
+*.pid
+*.seed
+
+# ====================
+# Testing & Coverage
+# ====================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+tests/
+test_*.py
+*_test.py
+*.pytest_cache
+
+# ====================
+# Documentation
+# ====================
+docs/
+*.md
+!README.md
+*.rst
+
+mkdocs.yml
+site/
+
+# ====================
+# Docker & Container
+# ====================
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose*.yml
+*.tar
+*.tar.gz
+*.tgz
+
+# ====================
+# CI/CD & Automation
+# ====================
+.github/
+.gitlab/
+.ci/
+jenkins/
+*.sh
+!.docker-entrypoint.sh
+
+# ====================
+# Environment & Secrets
+# ====================
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+secrets/
+.aws/
+.gcloud/
+.azure/
+
+# ====================
+# Data & Databases
+# ====================
+*.db
+*.sqlite
+*.sqlite3
+data/
+backup/
+*.dump
+
+# ====================
+# Application specific
+# ====================
+# Backend logs
+backend/logs/
+backend/__pycache__/
+backend/.env
+
+# Static files (if generated at runtime)
+backend/src/static/generated/
+
+# Uploads
+uploads/
+media/
+
+# ====================
+# OS & System files
+# ====================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.exe
+*.dll
+*.so
+*.dylib
+
+# ====================
+# Development tools
+# ====================
+.docker/
+.python-version
+.pre-commit-config.yaml
+.flake8
+pyproject.toml
+setup.cfg
+setup.py
+
+
+# ====================
+# Backup files
+# ====================
+*.bak
+*.backup
+*.old
+*.orig
+
+# ====================
+# Other
+# ====================
+*.zip
+*.rar
+*.7z
+*.tar.gz
+node_modules/
+package-lock.json
+yarn.lock

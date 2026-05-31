@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Backend FastAPI service
+  chatbot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: runtime  # Dùng multi-stage production
+    container_name: loansp-chatbot
+    ports:
+      - "8000:8000"  # Map port host -> container
+    environment:
+      # Lấy từ file .env (không hardcode trong file này)
+      - GROQ_API=${GROQ_API}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - MODEL_NAME=${MODEL_NAME:-openai/gpt-oss-20b}
+    env_file:
+      - ../.env  # Load toàn bộ biến từ .env
+    volumes:
+      # Mount logs để xem từ host (optional)
+      - ./logs:/app/backend/logs
+      # Mount source code cho development (comment khi production)
+      # - ./backend:/app/backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - loansp-network
+    # Giới hạn tài nguyên (optional)
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+          cpus: '2'
+        reservations:
+          memory: 2G
+          cpus: '1'
+
+# Networks
+networks:
+  loansp-network:
+    driver: bridge
+    name: loansp-network
