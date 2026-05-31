@@ -16,7 +16,7 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-production}
       - MODEL_NAME=${MODEL_NAME:-openai/gpt-oss-20b}
     env_file:
-      - ../.env  # Load toàn bộ biến từ .env
+      - .env  # Load toàn bộ biến từ .env
     volumes:
       # Mount logs để xem từ host (optional)
       - ./logs:/app/backend/logs
@@ -24,7 +24,7 @@ services:
       # - ./backend:/app/backend
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3

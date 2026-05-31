@@ -6,7 +6,7 @@ import structlog
 class CustomLogger:
     def __init__(self, log_dir = "logs"):
         #ensure log directory exists
-        self.log_dir = os.path.join(os.getcwd(),"loansp-ai", log_dir)
+        self.log_dir = os.path.join(os.getcwd(), log_dir)
         os.makedirs(self.log_dir, exist_ok=True)
 
         #timestamp for log file

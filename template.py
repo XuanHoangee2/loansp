@@ -28,7 +28,7 @@ list_of_file = [
     f"{project_name}/docker-compose.yml",
     f"{project_name}/.github/workflows/ci.yml",
     "requirements.txt",
-    ".env",
+    f"{project_name}/.env",
     ".gitignore",
 
 ]
