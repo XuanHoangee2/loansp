@@ -39,11 +39,11 @@ jobs:
 
       - name: Lint with Ruff
         run: |
-          ruff check backend/ --output-format=github
-          ruff format backend/ --check
+          ruff check backend/ test/ --output-format=github
+          ruff format backend/ test/ --check
 
       - name: Run tests
-        run: pytest backend/ -v --tb=short
+        run: pytest test/ -v --tb=short
         env:
           GROQ_API: ${{ secrets.GROQ_API || 'dummy-key-for-ci' }}
           ENVIRONMENT: test

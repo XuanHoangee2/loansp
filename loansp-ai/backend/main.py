@@ -4,15 +4,10 @@ from app.api.web_html import router as web_router
 from app.api.health_check import router as health_router
 from contextlib import asynccontextmanager
 from app.core.logging.log import logger
-from app.modules.embeddings.embeddings_layer import download_embeddings
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.runnables import RunnablePassthrough
-from langchain.memory import ConversationBufferMemory
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.messages import BaseMessage, HumanMessage
-from contextlib import asynccontextmanager
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
@@ -48,7 +43,7 @@ async def lifespan(app: FastAPI):
         MessagesPlaceholder(variable_name="chat_history"), 
         ("human", "{input}")
         ])
-    # Tạo chain 
+    # T?o chain 
     app.state.question_answer_chain = (
         app.state.prompt
         | app.state.llm
@@ -88,4 +83,3 @@ if __name__ == "__main__":
         reload=True,
         log_level="info"
     )
-
