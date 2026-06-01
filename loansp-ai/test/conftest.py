@@ -10,11 +10,11 @@ if backend_path not in sys.path:
 
 os.environ.setdefault("GROQ_API", "dummy-groq-api-key-for-tests")
 
-from fastapi.testclient import TestClient
-import pytest
+from fastapi.testclient import TestClient  # noqa: E402
+import pytest  # noqa: E402
 
 # Import main AFTER adding backend to path
-from main import app
+from main import app  # noqa: E402
 
 
 @pytest.fixture
