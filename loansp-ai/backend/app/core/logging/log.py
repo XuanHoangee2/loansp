@@ -3,13 +3,14 @@ import logging
 from datetime import datetime
 import structlog
 
+
 class CustomLogger:
-    def __init__(self, log_dir = "logs"):
-        #ensure log directory exists
+    def __init__(self, log_dir="logs"):
+        # ensure log directory exists
         self.log_dir = os.path.join(os.getcwd(), log_dir)
         os.makedirs(self.log_dir, exist_ok=True)
 
-        #timestamp for log file
+        # timestamp for log file
         log_file = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
         self.log_path_file = os.path.join(self.log_dir, log_file)
@@ -17,7 +18,7 @@ class CustomLogger:
     def get_logger(self):
         logger_name = os.path.basename(self.log_path_file)
 
-        #config logging for console + file 
+        # config logging for console + file
         file_handler = logging.FileHandler(self.log_path_file)
         file_handler.setLevel(logging.INFO)
         file_handler.setFormatter(logging.Formatter("%(message)s"))
@@ -44,7 +45,8 @@ class CustomLogger:
         )
 
         return structlog.get_logger(logger_name)
-    
+
+
 logger = CustomLogger().get_logger()
 # logger.info("App started")
 # logger.error("Something went wrong", error="File not found")

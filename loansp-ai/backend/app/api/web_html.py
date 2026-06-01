@@ -6,11 +6,9 @@ router = APIRouter()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+
 @router.get("/")
 async def home():
     """Trang chủ với giao diện chat"""
 
-    return FileResponse(
-        str(BASE_DIR / "src" / "index.html")
-    )
-
+    return FileResponse(str(BASE_DIR / "src" / "index.html"))

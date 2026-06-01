@@ -32,22 +32,20 @@ async def lifespan(app: FastAPI):
 
     # LLM
     app.state.llm = ChatGroq(
-        model="openai/gpt-oss-20b",
-        temperature=0.7,
-        groq_api_key=os.getenv("GROQ_API")
+        model="openai/gpt-oss-20b", temperature=0.7, groq_api_key=os.getenv("GROQ_API")
     )
 
     # Prompt
-    app.state.prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt_LoanAgent),
-        MessagesPlaceholder(variable_name="chat_history"), 
-        ("human", "{input}")
-        ])
-    # T?o chain 
+    app.state.prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_prompt_LoanAgent),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("human", "{input}"),
+        ]
+    )
+    # T?o chain
     app.state.question_answer_chain = (
-        app.state.prompt
-        | app.state.llm
-        | StrOutputParser()
+        app.state.prompt | app.state.llm | StrOutputParser()
     )
 
     logger.info("Application initialized successfully")
@@ -61,7 +59,7 @@ app = FastAPI(
     title="Loan Agent API",
     description="AI-powered loan consultation chatbot",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -76,10 +74,4 @@ app.include_router(chat_router)
 app.include_router(web_router)
 app.include_router(health_router)
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=True,
-        log_level="info"
-    )
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, log_level="info")

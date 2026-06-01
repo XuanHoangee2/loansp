@@ -22,7 +22,7 @@ def client():
     """Provide a TestClient with the LLM chain mocked."""
     mock_chain = AsyncMock()
     mock_chain.ainvoke.return_value = "This is a mocked loan advisor response."
-    app.state.question_answer_chain = mock_chain
 
     with TestClient(app) as test_client:
+        app.state.question_answer_chain = mock_chain
         yield test_client

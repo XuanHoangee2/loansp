@@ -6,7 +6,7 @@ from main import app
 def test_chat_success(client):
     payload = {
         "message": "What is the interest rate for a home loan?",
-        "thread_id": "test-thread-123"
+        "thread_id": "test-thread-123",
     }
     response = client.post("/chat", json=payload)
     assert response.status_code == HTTPStatus.OK
@@ -20,10 +20,7 @@ def test_chat_success(client):
 def test_chat_dict_response(client):
     """Test that the endpoint handles dict-shaped LLM output."""
     app.state.question_answer_chain.ainvoke.return_value = {"answer": "Dict answer"}
-    payload = {
-        "message": "Explain debt ratio",
-        "thread_id": "test-thread-456"
-    }
+    payload = {"message": "Explain debt ratio", "thread_id": "test-thread-456"}
     response = client.post("/chat", json=payload)
     assert response.status_code == HTTPStatus.OK
     data = response.json()
@@ -33,11 +30,10 @@ def test_chat_dict_response(client):
 
 def test_chat_error(client):
     """Test that LLM errors are surfaced as HTTP 500."""
-    app.state.question_answer_chain.ainvoke.side_effect = Exception("LLM service failed")
-    payload = {
-        "message": "Hi",
-        "thread_id": "test-thread-789"
-    }
+    app.state.question_answer_chain.ainvoke.side_effect = Exception(
+        "LLM service failed"
+    )
+    payload = {"message": "Hi", "thread_id": "test-thread-789"}
     response = client.post("/chat", json=payload)
     assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
     assert "LLM service failed" in response.json()["detail"]
