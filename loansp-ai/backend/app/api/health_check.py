@@ -7,6 +7,6 @@ async def health_check():
     """Health check endpoint cho monitoring"""
     return {
         "status": "healthy",
-        "service": "medical-chatbot",
+        "service": "loansp-chatbot",
         "version": "1.0.0"
     }
