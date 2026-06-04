@@ -2,6 +2,7 @@ from fastapi import HTTPException, Request
 from fastapi.routing import APIRouter
 from app.schemas.chat_schema import ChatRequest, ChatResponse
 from app.core.logging.log import logger
+from langchain_core.messages import HumanMessage
 
 router = APIRouter()
 
@@ -14,18 +15,15 @@ async def chat(chat_request: ChatRequest, request: Request):
     start_time = time.time()
 
     try:
-        chain = request.app.state.question_answer_chain
-        # T?o input data
-        input_data = {"input": chat_request.message, "chat_history": []}
+        chain = request.app.state.graph
+        # input data
+        input_data = {"messages": [HumanMessage(content=chat_request.message)]}
+        config = {"configurable": {"thread_id": chat_request.thread_id}}
 
-        # Th?c thi
-        response_text = await chain.ainvoke(input_data)
-        ai_response = (
-            response_text
-            if isinstance(response_text, str)
-            else response_text.get("answer", str(response_text))
-        )
-        # L?y response
+        # Invoke with config
+        response_text = await chain.ainvoke(input_data,config)
+        ai_response = response_text["messages"][-1].content
+        # response
 
         processing_time = time.time() - start_time
 

@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, MagicMock
 
 # Add backend to Python path so we can import main
 backend_path = str(Path(__file__).resolve().parent.parent / "backend")
@@ -19,10 +19,13 @@ from main import app  # noqa: E402
 
 @pytest.fixture
 def client():
-    """Provide a TestClient with the LLM chain mocked."""
-    mock_chain = AsyncMock()
-    mock_chain.ainvoke.return_value = "This is a mocked loan advisor response."
+    """Provide a TestClient with the LangGraph workflow mocked."""
+    mock_msg = MagicMock()
+    mock_msg.content = "This is a mocked loan advisor response."
+
+    mock_graph = AsyncMock()
+    mock_graph.ainvoke.return_value = {"messages": [mock_msg]}
 
     with TestClient(app) as test_client:
-        app.state.question_answer_chain = mock_chain
+        app.state.graph = mock_graph
         yield test_client
