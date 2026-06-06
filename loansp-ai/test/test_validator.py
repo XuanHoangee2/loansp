@@ -1,7 +1,7 @@
-from ..backend.app.validator.validator import TaskValidator
-from ..backend.app.validator.models import ValidationResult, ValidationStatus
-from ..backend.app.validator.validation_service import ValidationService
-from ..backend.app.validator.question_generator import QuestionGenerator
+from app.validator.validator import TaskValidator
+from app.validator.models import ValidationResult, ValidationStatus
+from app.validator.validation_service import ValidationService
+from app.validator.question_generator import QuestionGenerator
 
 
 class TestTaskValidator:
@@ -96,7 +96,7 @@ class TestValidationService:
 
     def test_validate_plan_all_valid(self):
         """Test validation service when all tasks are valid."""
-        from ..backend.app.planner.models import (
+        from app.planner.models import (
             PlanResult,
             PlannedTask,
             TaskType,
@@ -120,7 +120,7 @@ class TestValidationService:
 
     def test_validate_plan_missing_data(self):
         """Test validation service when some tasks have missing data."""
-        from ..backend.app.planner.models import (
+        from app.planner.models import (
             PlanResult,
             PlannedTask,
             TaskType,
@@ -139,7 +139,7 @@ class TestValidationService:
 
     def test_build_missing_question(self):
         """Test building missing questions."""
-        from ..backend.app.validator.models import ValidationResult, ValidationStatus
+        from app.validator.models import ValidationResult, ValidationStatus
 
         validation_result = ValidationResult(
             status=ValidationStatus.MISSING_DATA,

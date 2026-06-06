@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from ..backend.app.planner.models import PlanResult, TaskType, Intent, IntentResult
-from ..backend.app.planner.intent_planner import IntentPlanner
-from ..backend.app.planner.task_planner import TaskPlanner
-from ..backend.app.planner.planner_service import PlannerService
+from app.planner.models import PlanResult, TaskType, Intent, IntentResult
+from app.planner.intent_planner import IntentPlanner
+from app.planner.task_planner import TaskPlanner
+from app.planner.planner_service import PlannerService
 
 
 class TestIntentPlanner:

@@ -22,7 +22,7 @@ class IntentPlanner:
 
         try:
             data = json.loads(raw_text.strip())
-        except json.JSONDecodeError:
+        except ValueError:
             match = re.search(r"\{.*\}", raw_text, re.DOTALL)
             if match:
                 try:
@@ -35,7 +35,7 @@ class IntentPlanner:
         intent_str = data.get("intent", "general")
         try:
             intent = Intent(intent_str)
-        except json.JSONDecodeError:
+        except ValueError:
             intent = Intent.GENERAL
 
         return IntentResult(intent=intent, confidence=data.get("confidence", 1.0))
