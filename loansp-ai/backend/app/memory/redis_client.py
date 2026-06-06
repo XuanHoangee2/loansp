@@ -2,7 +2,6 @@ from redis.asyncio import Redis
 
 
 class RedisClient:
-
     def __init__(
         self,
         host: str,

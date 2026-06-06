@@ -15,6 +15,7 @@ class IntentResult(BaseModel):
     intent: Intent
     confidence: float = 1.0
 
+
 class TaskType(str, Enum):
     RECOMMEND_LOAN = "recommend_loan"
     CALCULATE_DTI = "calculate_dti"
@@ -23,9 +24,11 @@ class TaskType(str, Enum):
     FAQ_SEARCH = "faq_search"
     GENERAL_RESPONSE = "general_response"
 
+
 class PlannedTask(BaseModel):
     task: TaskType
     reason: str
+
 
 class PlanResult(BaseModel):
     intent: Intent

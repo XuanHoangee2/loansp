@@ -18,7 +18,9 @@ class TestIntentPlanner:
     async def test_run_valid_json(self):
         planner = IntentPlanner(MagicMock())
         planner.chain = AsyncMock()
-        planner.chain.ainvoke.return_value = '{"intent": "loan_recommendation", "confidence": 0.95}'
+        planner.chain.ainvoke.return_value = (
+            '{"intent": "loan_recommendation", "confidence": 0.95}'
+        )
         result = await planner.run("I want to buy a house")
         assert isinstance(result, IntentResult)
         assert result.intent == Intent.LOAN_RECOMMENDATION
@@ -28,7 +30,9 @@ class TestIntentPlanner:
     async def test_run_json_with_markdown(self):
         planner = IntentPlanner(MagicMock())
         planner.chain = AsyncMock()
-        planner.chain.ainvoke.return_value = "```json\n{\"intent\": \"faq\", \"confidence\": 0.8}\n```"
+        planner.chain.ainvoke.return_value = (
+            '```json\n{"intent": "faq", "confidence": 0.8}\n```'
+        )
         result = await planner.run("What are your working hours?")
         assert result.intent == Intent.FAQ
 
@@ -45,7 +49,9 @@ class TestIntentPlanner:
     async def test_run_unknown_intent(self):
         planner = IntentPlanner(MagicMock())
         planner.chain = AsyncMock()
-        planner.chain.ainvoke.return_value = '{"intent": "some_unknown_intent", "confidence": 0.5}'
+        planner.chain.ainvoke.return_value = (
+            '{"intent": "some_unknown_intent", "confidence": 0.5}'
+        )
         result = await planner.run("random query")
         assert result.intent == Intent.GENERAL
 
@@ -61,9 +67,7 @@ class TestTaskPlanner:
     async def test_run_valid_json(self):
         planner = TaskPlanner(MagicMock())
         planner.chain = AsyncMock()
-        planner.chain.ainvoke.return_value = (
-            '{"intent": "loan_recommendation", "tasks": [{"task": "recommend_loan", "reason": "user wants a loan"}]}'
-        )
+        planner.chain.ainvoke.return_value = '{"intent": "loan_recommendation", "tasks": [{"task": "recommend_loan", "reason": "user wants a loan"}]}'
         result = await planner.run("I want a home loan", "loan_recommendation")
         assert isinstance(result, PlanResult)
         assert result.intent == Intent.LOAN_RECOMMENDATION
@@ -84,9 +88,7 @@ class TestTaskPlanner:
     async def test_run_unknown_task(self):
         planner = TaskPlanner(MagicMock())
         planner.chain = AsyncMock()
-        planner.chain.ainvoke.return_value = (
-            '{"intent": "loan_recommendation", "tasks": [{"task": "unknown_task", "reason": "test"}]}'
-        )
+        planner.chain.ainvoke.return_value = '{"intent": "loan_recommendation", "tasks": [{"task": "unknown_task", "reason": "test"}]}'
         result = await planner.run("query", "loan_recommendation")
         assert result.tasks[0].task == TaskType.GENERAL_RESPONSE
 
@@ -99,11 +101,11 @@ class TestPlannerService:
         mock_llm = MagicMock()
         service = PlannerService(mock_llm)
         service.intent_planner.chain = AsyncMock()
-        service.intent_planner.chain.ainvoke.return_value = '{"intent": "loan_recommendation", "confidence": 0.95}'
-        service.task_planner.chain = AsyncMock()
-        service.task_planner.chain.ainvoke.return_value = (
-            '{"intent": "loan_recommendation", "tasks": [{"task": "recommend_loan", "reason": "user wants a loan"}]}'
+        service.intent_planner.chain.ainvoke.return_value = (
+            '{"intent": "loan_recommendation", "confidence": 0.95}'
         )
+        service.task_planner.chain = AsyncMock()
+        service.task_planner.chain.ainvoke.return_value = '{"intent": "loan_recommendation", "tasks": [{"task": "recommend_loan", "reason": "user wants a loan"}]}'
         result = await service.plan("I want a home loan")
         assert isinstance(result, PlanResult)
         assert result.intent == Intent.LOAN_RECOMMENDATION

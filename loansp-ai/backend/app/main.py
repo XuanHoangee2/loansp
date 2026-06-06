@@ -41,7 +41,11 @@ from app.executor.result_builder import ResultBuilder
 from app.executor.executor_service import ExecutorService
 from app.executor.mcp_router import MCPRouter
 
-from app.modules.conversation.prompt_template import system_prompt_extract_LoanAgent, system_prompt_classifier_LoanAgent, system_prompt_conversation_LoanAgent
+from app.modules.conversation.prompt_template import (
+    system_prompt_extract_LoanAgent,
+    system_prompt_classifier_LoanAgent,
+    system_prompt_conversation_LoanAgent,
+)
 
 
 load_dotenv()
@@ -60,39 +64,37 @@ async def lifespan(app: FastAPI):
     try:
         # LLM
         app.state.llm = ChatGroq(
-            model="openai/gpt-oss-20b", temperature=0.7, groq_api_key=os.getenv("GROQ_API")
+            model="openai/gpt-oss-20b",
+            temperature=0.7,
+            groq_api_key=os.getenv("GROQ_API"),
         )
         #################################################################
 
-        structured_llm = (app.state.llm.with_structured_output(LoanUserInfo))
+        structured_llm = app.state.llm.with_structured_output(LoanUserInfo)
 
-        classifier_llm = (app.state.llm.with_structured_output(ClassifierLoan))
+        classifier_llm = app.state.llm.with_structured_output(ClassifierLoan)
 
-        prompt_extract = ChatPromptTemplate.from_messages([
-        ("system", system_prompt_extract_LoanAgent),
-        ("human", "{input}")
-        ])
+        prompt_extract = ChatPromptTemplate.from_messages(
+            [("system", system_prompt_extract_LoanAgent), ("human", "{input}")]
+        )
 
-        classifier_prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt_classifier_LoanAgent),
-        ("human", "{input}")
-        ])
+        classifier_prompt = ChatPromptTemplate.from_messages(
+            [("system", system_prompt_classifier_LoanAgent), ("human", "{input}")]
+        )
 
-        conversation_prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt_conversation_LoanAgent),
-        MessagesPlaceholder(variable_name="chat_history"),
-        ("human", "{input}")
-        ])
+        conversation_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt_conversation_LoanAgent),
+                MessagesPlaceholder(variable_name="chat_history"),
+                ("human", "{input}"),
+            ]
+        )
 
         extract_chain = prompt_extract | structured_llm
 
         classifier_chain = classifier_prompt | classifier_llm
 
-        conversation_chain = (
-            conversation_prompt
-            | app.state.llm
-            | StrOutputParser()
-        )
+        conversation_chain = conversation_prompt | app.state.llm | StrOutputParser()
 
         ai_service = AIService(
             extract_chain=extract_chain,
@@ -102,8 +104,8 @@ async def lifespan(app: FastAPI):
 
         # Memory
         redis_client = RedisClient(
-        host=os.getenv("REDIS_HOST", "localhost"),
-        port=int(os.getenv("REDIS_PORT", 6379)),
+            host=os.getenv("REDIS_HOST", "localhost"),
+            port=int(os.getenv("REDIS_PORT", 6379)),
         )
 
         redis = redis_client.redis
@@ -118,19 +120,19 @@ async def lifespan(app: FastAPI):
         #######################################
 
         # Planner
-        planner_service = PlannerService(
-            llm=app.state.llm
-        )
-        # validation 
+        planner_service = PlannerService(llm=app.state.llm)
+        # validation
         validation_service = ValidationService()
         ##########################################
 
         # MCP Client
         try:
             mcp_client = MCPClient(
-            server_configs={
-            "loan_mcp": os.getenv("LOAN_MCP_URL", "http://localhost:8001/sse"),
-            "knowledge_mcp": os.getenv("KNOWLEDGE_MCP_URL", "http://localhost:8002/sse"),
+                server_configs={
+                    "loan_mcp": os.getenv("LOAN_MCP_URL", "http://localhost:8001/sse"),
+                    "knowledge_mcp": os.getenv(
+                        "KNOWLEDGE_MCP_URL", "http://localhost:8002/sse"
+                    ),
                 }
             )
             await mcp_client.connect()
@@ -156,22 +158,21 @@ async def lifespan(app: FastAPI):
 
         app.state.checkpointer = MemorySaver()
         app.state.graph = _initialize_graph(
-        app,
-        planner_service,
-        validation_service,
-        executor_service,
-        memory_service,
-        ai_service,
+            app,
+            planner_service,
+            validation_service,
+            executor_service,
+            memory_service,
+            ai_service,
         )
         logger.info("Application initialized successfully")
 
         yield
 
     finally:
-
         logger.info("Shutting down application...")
 
-        if hasattr(app.state,"memory_service"):
+        if hasattr(app.state, "memory_service"):
             await redis.close()
         if hasattr(app.state, "mcp_client"):
             await app.state.mcp_client.disconnect()
@@ -198,4 +199,4 @@ app.include_router(health_router)
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, log_level="info")
 
-#docker run -d -p 6379:6379 redis:alpine
+# docker run -d -p 6379:6379 redis:alpine

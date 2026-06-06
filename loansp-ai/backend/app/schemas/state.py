@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class LoanState(TypedDict):
     user_message: str
 

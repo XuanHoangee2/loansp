@@ -47,7 +47,7 @@ class TaskExecutor:
                 except json.JSONDecodeError:
                     return {"text": content.text}
         return {"raw": str(result)}
-    
+
     async def execute(self, task_name: str, customer_profile: dict) -> ExecutionResult:
         try:
             route = self.router.resolve(task_name)
@@ -55,7 +55,7 @@ class TaskExecutor:
             tool = route["tool"]
 
             # Nếu server không kết nối được, fallback sang local
-            if server not in getattr(self.mcp_client, 'sessions', {}):
+            if server not in getattr(self.mcp_client, "sessions", {}):
                 return await self._fallback_local(task_name, customer_profile)
 
             arguments = self._build_arguments(tool, customer_profile)
@@ -77,4 +77,6 @@ class TaskExecutor:
             dti = monthly_payment / monthly_income if monthly_income else 0
             return ExecutionResult(task=task_name, success=True, data={"dti": dti})
         # ... thêm fallback cho các task khác
-        return ExecutionResult(task=task_name, success=False, error="No MCP server and no local fallback")
+        return ExecutionResult(
+            task=task_name, success=False, error="No MCP server and no local fallback"
+        )

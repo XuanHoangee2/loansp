@@ -21,7 +21,7 @@ async def chat(chat_request: ChatRequest, request: Request):
         config = {"configurable": {"thread_id": chat_request.thread_id}}
 
         # Invoke with config
-        response_text = await chain.ainvoke(input_data,config)
+        response_text = await chain.ainvoke(input_data, config)
         ai_response = response_text["messages"][-1].content
         # response
 

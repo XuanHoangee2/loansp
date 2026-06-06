@@ -10,28 +10,36 @@ from .prompt import TASK_PROMPT
 class TaskPlanner:
     def __init__(self, llm):
         self.chain = (
-            ChatPromptTemplate.from_messages([
-                ("system", TASK_PROMPT),
-                ("human", "Intent:\n{intent}\n\nUser:\n{query}")
-            ])
+            ChatPromptTemplate.from_messages(
+                [
+                    ("system", TASK_PROMPT),
+                    ("human", "Intent:\n{intent}\n\nUser:\n{query}"),
+                ]
+            )
             | llm
             | StrOutputParser()
         )
 
     async def run(self, query: str, intent: str):
         raw_text = await self.chain.ainvoke({"query": query, "intent": intent})
-        
+
         try:
             data = json.loads(raw_text.strip())
         except json.JSONDecodeError:
-            match = re.search(r'\{.*\}', raw_text, re.DOTALL)
+            match = re.search(r"\{.*\}", raw_text, re.DOTALL)
             if match:
                 try:
                     data = json.loads(match.group())
                 except json.JSONDecodeError:
-                    data = {"intent": intent, "tasks": [{"task": "general_response", "reason": "fallback"}]}
+                    data = {
+                        "intent": intent,
+                        "tasks": [{"task": "general_response", "reason": "fallback"}],
+                    }
             else:
-                data = {"intent": intent, "tasks": [{"task": "general_response", "reason": "fallback"}]}
+                data = {
+                    "intent": intent,
+                    "tasks": [{"task": "general_response", "reason": "fallback"}],
+                }
 
         intent_str = data.get("intent", intent)
         try:

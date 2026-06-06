@@ -1,6 +1,5 @@
 from ..backend.app.validator.validator import TaskValidator
 from ..backend.app.validator.models import ValidationResult, ValidationStatus
-from ..backend.app.validator.tool_requirements import TOOL_REQUIREMENTS
 from ..backend.app.validator.validation_service import ValidationService
 from ..backend.app.validator.question_generator import QuestionGenerator
 
@@ -17,21 +16,23 @@ class TestTaskValidator:
             "income": 15000000,
             "loan_amount": 500000000,
             "loan_year": 10,
-            "loan_purpose": "mua_nha"
+            "loan_purpose": "mua_nha",
         }
         result = self.validator.validate("recommend_loan", profile)
         assert isinstance(result, ValidationResult)
         assert result.status == ValidationStatus.VALID
         assert result.task == "recommend_loan"
         assert result.missing_fields == []
-        assert set(result.available_fields) == {"income", "loan_amount", "loan_year", "loan_purpose"}
+        assert set(result.available_fields) == {
+            "income",
+            "loan_amount",
+            "loan_year",
+            "loan_purpose",
+        }
 
     def test_validate_missing_fields(self):
         """Test validation when some required fields are missing."""
-        profile = {
-            "income": 15000000,
-            "loan_purpose": "mua_nha"
-        }
+        profile = {"income": 15000000, "loan_purpose": "mua_nha"}
         result = self.validator.validate("recommend_loan", profile)
         assert result.status == ValidationStatus.MISSING_DATA
         assert result.task == "recommend_loan"
@@ -61,10 +62,7 @@ class TestTaskValidator:
 
     def test_validate_calculate_ltv(self):
         """Test LTV calculation requirements."""
-        profile = {
-            "loan_amount": 500000000,
-            "asset_value": 1000000000
-        }
+        profile = {"loan_amount": 500000000, "asset_value": 1000000000}
         result = self.validator.validate("calculate_ltv", profile)
         assert result.status == ValidationStatus.VALID
         assert result.missing_fields == []
@@ -83,7 +81,7 @@ class TestTaskValidator:
             "income": 15000000,
             "loan_amount": None,
             "loan_year": 10,
-            "loan_purpose": "mua_nha"
+            "loan_purpose": "mua_nha",
         }
         result = self.validator.validate("recommend_loan", profile)
         assert result.status == ValidationStatus.MISSING_DATA
@@ -98,16 +96,22 @@ class TestValidationService:
 
     def test_validate_plan_all_valid(self):
         """Test validation service when all tasks are valid."""
-        from ..backend.app.planner.models import PlanResult, PlannedTask, TaskType, Intent
+        from ..backend.app.planner.models import (
+            PlanResult,
+            PlannedTask,
+            TaskType,
+            Intent,
+        )
+
         plan = PlanResult(
             intent=Intent.LOAN_RECOMMENDATION,
-            tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")]
+            tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")],
         )
         profile = {
             "income": 15000000,
             "loan_amount": 500000000,
             "loan_year": 10,
-            "loan_purpose": "mua_nha"
+            "loan_purpose": "mua_nha",
         }
         result = self.service.validate_plan(plan, profile)
         assert result["status"] == "valid"
@@ -116,10 +120,16 @@ class TestValidationService:
 
     def test_validate_plan_missing_data(self):
         """Test validation service when some tasks have missing data."""
-        from ..backend.app.planner.models import PlanResult, PlannedTask, TaskType, Intent
+        from ..backend.app.planner.models import (
+            PlanResult,
+            PlannedTask,
+            TaskType,
+            Intent,
+        )
+
         plan = PlanResult(
             intent=Intent.LOAN_RECOMMENDATION,
-            tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")]
+            tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")],
         )
         profile = {"income": 15000000}
         result = self.service.validate_plan(plan, profile)
@@ -130,10 +140,11 @@ class TestValidationService:
     def test_build_missing_question(self):
         """Test building missing questions."""
         from ..backend.app.validator.models import ValidationResult, ValidationStatus
+
         validation_result = ValidationResult(
             status=ValidationStatus.MISSING_DATA,
             task="recommend_loan",
-            missing_fields=["income", "loan_amount"]
+            missing_fields=["income", "loan_amount"],
         )
         question = self.service.build_missing_question(validation_result)
         assert "1." in question

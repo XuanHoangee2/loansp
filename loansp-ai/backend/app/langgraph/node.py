@@ -1,6 +1,7 @@
 from langchain_core.messages import AIMessage
 from .question_bank import QUESTION_BANK
 
+
 # Node 1 Load Memory
 def load_memory_node(memory_service):
     async def _node(state):
@@ -10,153 +11,103 @@ def load_memory_node(memory_service):
             "customer_profile": profile.model_dump(),
             "active_task": task.model_dump() if task else None,
         }
+
     return _node
+
+
 # Node 2 Extract User Information
 
-def extract_profile_node(ai_service,memory_service):
+
+def extract_profile_node(ai_service, memory_service):
     async def _node(state):
 
-        user_message = (state["messages"][-1].content)
+        user_message = state["messages"][-1].content
 
-        extracted = await (ai_service.extract_chain.ainvoke(
-                {
-                    "input":user_message
-                }
-            )
-        )
+        extracted = await ai_service.extract_chain.ainvoke({"input": user_message})
         updates = {
-
-        "income":extracted.income,
-
-        "asset_value":extracted.asset_value,
-
-        "loan_amount":extracted.loan_amount,
-
-        "loan_year":extracted.loan_year,
-
-        "loan_purpose":extracted.loan_purpose,
-
-        "language":extracted.language,
+            "income": extracted.income,
+            "asset_value": extracted.asset_value,
+            "loan_amount": extracted.loan_amount,
+            "loan_year": extracted.loan_year,
+            "loan_purpose": extracted.loan_purpose,
+            "language": extracted.language,
         }
-        profile = (await memory_service.update_profile(state["session_id"],updates))
-        return {
-        "customer_profile":profile.model_dump()
-        }
+        profile = await memory_service.update_profile(state["session_id"], updates)
+        return {"customer_profile": profile.model_dump()}
+
     return _node
+
 
 # Node 3 Intent
 def intent_node(planner_service):
     async def _node(state):
 
-        user_input = (state["messages"][-1].content)
+        user_input = state["messages"][-1].content
 
-        intent = (await planner_service.plan(user_input))
+        intent = await planner_service.plan(user_input)
 
-        return {
-            "intent": intent
-        }
+        return {"intent": intent}
+
     return _node
+
 
 # Edge 1 Route based on Intent
 def route_intent(state):
-    if (
-        state["intent"]
-        ==
-        "general_chat"
-    ):
+    if state["intent"] == "general_chat":
         return "general_chat"
 
     return "planner"
 
+
 # Node 4 General Chat
 def general_chat_node(ai_service):
-    async def _node(
-        state
-    ):
+    async def _node(state):
 
-        response = await (
-            ai_service
-            .conversation_chain
-            .ainvoke(
-                {
-                    "input":
-                        state[
-                            "messages"
-                        ][-1].content,
-
-                    "chat_history":
-                        state[
-                            "messages"
-                        ][:-1],
-                }
-            )
+        response = await ai_service.conversation_chain.ainvoke(
+            {
+                "input": state["messages"][-1].content,
+                "chat_history": state["messages"][:-1],
+            }
         )
 
-        return {
-
-            "messages":[
-                AIMessage(
-                    content=response
-                )
-            ]
-        }
+        return {"messages": [AIMessage(content=response)]}
 
     return _node
+
 
 # Node 5 Planner
 def planner_node(planner_service):
-    async def _node(
-        state
-    ):
+    async def _node(state):
 
-        plan = (
-            await planner_service
-            .plan(
-                user_query=
-                    state[
-                        "messages"
-                    ][-1].content,
-            )
+        plan = await planner_service.plan(
+            user_query=state["messages"][-1].content,
         )
 
-        return {
-            "plan": plan
-        }
+        return {"plan": plan}
+
     return _node
+
 
 # Node 6 Validator
-def validator_node(
-    validation_service
-):
-    async def _node(
-    state
-    ):
+def validator_node(validation_service):
+    async def _node(state):
 
-        result = (
-            validation_service
-            .validate_plan(
-                plan=
-                    state["plan"],
-
-                customer_profile=
-                    state[
-                        "customer_profile"
-                    ]
-            )
+        result = validation_service.validate_plan(
+            plan=state["plan"], customer_profile=state["customer_profile"]
         )
 
-        return {
-            "validation_result":
-                result
-        }
+        return {"validation_result": result}
+
     return _node
+
 
 # Edge 2 Route based on validation result
 def validation_router(state):
-    result = (state["validation_result"])
-    if (result["status"]=="valid"):
+    result = state["validation_result"]
+    if result["status"] == "valid":
         return "executor"
     return "ask_missing"
+
 
 # Node 7 Ask Missing Information
 def ask_missing_node(memory_service):
@@ -174,61 +125,41 @@ def ask_missing_node(memory_service):
             else:
                 task_name = "unknown"
 
-        await memory_service.save_active_task(state["session_id"], task_name, missing_fields)
+        await memory_service.save_active_task(
+            state["session_id"], task_name, missing_fields
+        )
 
         questions = []
         for field in missing_fields:
             questions.append(QUESTION_BANK["vi"][field][0])
 
-        return {
-            "messages": [
-                AIMessage(content="\n".join(questions))
-            ]
-        }
+        return {"messages": [AIMessage(content="\n".join(questions))]}
+
     return _node
-    
+
+
 # Node 8 Executor
 def executor_node(executor_service):
     async def _node(state):
-        result = (
-        await executor_service
-        .execute_plan(
-            plan=
-                state["plan"],
-
-            customer_profile=
-                state[
-                    "customer_profile"
-                ],
+        result = await executor_service.execute_plan(
+            plan=state["plan"],
+            customer_profile=state["customer_profile"],
         )
-    )
         return {
+            "execution_result": result,
+            "messages": [AIMessage(content=result["response"])],
+        }
 
-    "execution_result":
-        result,
-
-    "messages":[
-        AIMessage(
-            content=
-                result[
-                    "response"
-                ]
-        )
-    ]
-}   
     return _node
+
 
 # Node 9 Clear Task
 def clear_task_node(memory_service):
     async def _node(state):
         await memory_service.clear_task(state["session_id"])
         return {"active_task": state.get("active_task")}
+
     return _node
-
-
-
-
-
 
 
 # # NODE 1: Trích xuất thông tin
@@ -237,7 +168,7 @@ def clear_task_node(memory_service):
 #     def _extractor(state: LoanAgentState):
 #         user_input = state["messages"][-1].content
 #         extracted_data = extract_chain.invoke({
-#             "input": user_input                
+#             "input": user_input
 #         })
 #         return {
 #             "income": extracted_data.income or state.get("income"),
@@ -254,11 +185,11 @@ def clear_task_node(memory_service):
 #     # Lấy các thông tin từ State để làm tham số filter cho Vector DB
 #     user_income = state["income"]
 #     purpose = state["loan_purpose"]
-    
+
 #     # Giả lập gọi Vector DB (Hybrid Search)
 #     # results = vector_db.similarity_search(query=..., filter={"min_income": {"$lte": user_income}, ...})
 #     dummy_result = f"Dựa trên thu nhập {user_income:,} VNĐ và mục đích {purpose}, gợi ý gói vay VIB rải ngân 80% với lãi suất 6.5%."
-    
+
 #     return {
 #         "messages": [AIMessage(content=f"Tôi đã tìm thấy giải pháp phù hợp cho bạn: {dummy_result}")],
 #         "final_recommendation": dummy_result
@@ -346,12 +277,12 @@ def clear_task_node(memory_service):
 # # EDGE 2: Kiểm tra xem đã đủ thông tin để đi tiếp chưa
 # def check_information_status(state: LoanAgentState):
 #     # Kiểm tra xem 5 thông tin cốt lõi đã được điền đầy đủ chưa
-#     if (state.get("income") is not None and 
-#         state.get("asset_value") is not None and 
-#         state.get("loan_purpose") is not None and 
+#     if (state.get("income") is not None and
+#         state.get("asset_value") is not None and
+#         state.get("loan_purpose") is not None and
 #         state.get("loan_amount") is not None and
 #         state.get("loan_year") is not None):
-        
-#         return "go_to_db" 
-    
-#     return "ask_user_more" 
+
+#         return "go_to_db"
+
+#     return "ask_user_more"

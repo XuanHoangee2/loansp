@@ -10,25 +10,24 @@ from .prompt import INTENT_PROMPT
 class IntentPlanner:
     def __init__(self, llm):
         self.chain = (
-            ChatPromptTemplate.from_messages([
-                ("system", INTENT_PROMPT),
-                ("human", "{query}")
-            ])
+            ChatPromptTemplate.from_messages(
+                [("system", INTENT_PROMPT), ("human", "{query}")]
+            )
             | llm
             | StrOutputParser()
         )
 
     async def run(self, query: str) -> IntentResult:
         raw_text = await self.chain.ainvoke({"query": query})
-        
+
         try:
             data = json.loads(raw_text.strip())
         except json.JSONDecodeError:
-            match = re.search(r'\{.*\}', raw_text, re.DOTALL)
+            match = re.search(r"\{.*\}", raw_text, re.DOTALL)
             if match:
                 try:
                     data = json.loads(match.group())
-                except:
+                except Exception:
                     data = {"intent": "general", "confidence": 1.0}
             else:
                 data = {"intent": "general", "confidence": 1.0}
@@ -39,7 +38,4 @@ class IntentPlanner:
         except json.JSONDecodeError:
             intent = Intent.GENERAL
 
-        return IntentResult(
-            intent=intent,
-            confidence=data.get("confidence", 1.0)
-        )
+        return IntentResult(intent=intent, confidence=data.get("confidence", 1.0))

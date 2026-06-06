@@ -10,7 +10,6 @@ class ValidationStatus(str, Enum):
 
 
 class ValidationResult(BaseModel):
-
     status: ValidationStatus
 
     task: str

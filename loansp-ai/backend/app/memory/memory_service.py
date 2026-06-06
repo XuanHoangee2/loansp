@@ -8,7 +8,6 @@ from .conversation_memory import ConversationMemory
 
 
 class MemoryService:
-
     def __init__(
         self,
         profile_memory: ProfileMemory,
@@ -19,31 +18,23 @@ class MemoryService:
 
         self.task = task_memory
 
-        self.conversation = (
-            conversation_memory
-        )
+        self.conversation = conversation_memory
 
     async def update_profile(
         self,
         session_id: str,
         updates: dict,
     ):
-        return await (
-            self.profile.update(
-                session_id,
-                updates,
-            )
+        return await self.profile.update(
+            session_id,
+            updates,
         )
 
     async def get_profile(
         self,
         session_id: str,
     ):
-        return await (
-            self.profile.get(
-                session_id
-            )
-        )
+        return await self.profile.get(session_id)
 
     async def save_active_task(
         self,
@@ -67,16 +58,10 @@ class MemoryService:
         self,
         session_id: str,
     ):
-        return await (
-            self.task.get(
-                session_id
-            )
-        )
+        return await self.task.get(session_id)
 
     async def clear_task(
         self,
         session_id: str,
     ):
-        await self.task.clear(
-            session_id
-        )
+        await self.task.clear(session_id)

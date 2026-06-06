@@ -5,13 +5,9 @@ from langgraph.graph.message import add_messages
 
 
 class LoanAgentState(TypedDict):
-
     session_id: str
 
-    messages: Annotated[
-        list,
-        add_messages
-    ]
+    messages: Annotated[list, add_messages]
 
     customer_profile: dict
 

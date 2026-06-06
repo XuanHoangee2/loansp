@@ -2,7 +2,6 @@ from .models import ActiveTask
 
 
 class TaskMemory:
-
     TASK_TTL = 60 * 60 * 24
 
     def __init__(self, redis):
@@ -12,25 +11,19 @@ class TaskMemory:
         self,
         session_id: str,
     ):
-        return (
-            f"active_task:{session_id}"
-        )
+        return f"active_task:{session_id}"
 
     async def get(
         self,
         session_id: str,
     ):
 
-        data = await self.redis.get(
-            self._key(session_id)
-        )
+        data = await self.redis.get(self._key(session_id))
 
         if not data:
             return None
 
-        return ActiveTask.model_validate_json(
-            data
-        )
+        return ActiveTask.model_validate_json(data)
 
     async def save(
         self,
@@ -48,6 +41,4 @@ class TaskMemory:
         self,
         session_id: str,
     ):
-        await self.redis.delete(
-            self._key(session_id)
-        )
+        await self.redis.delete(self._key(session_id))

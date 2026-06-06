@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class ActiveTask(BaseModel):
-
     task: str
 
     status: str = "waiting"
@@ -13,7 +12,6 @@ class ActiveTask(BaseModel):
 
 
 class CustomerProfile(BaseModel):
-
     income: Optional[int] = None
 
     monthly_debt: Optional[int] = None

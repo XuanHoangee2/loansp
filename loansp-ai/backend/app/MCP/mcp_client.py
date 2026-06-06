@@ -23,7 +23,9 @@ class MCPClient:
             try:
                 transport = await self.exit_stack.enter_async_context(sse_client(url))
                 read, write = transport
-                session = await self.exit_stack.enter_async_context(ClientSession(read, write))
+                session = await self.exit_stack.enter_async_context(
+                    ClientSession(read, write)
+                )
                 await session.initialize()
                 self.sessions[name] = session
                 logger.info(f"MCP server '{name}' connected")
@@ -33,7 +35,9 @@ class MCPClient:
     async def call_tool(self, server_name: str, tool_name: str, arguments: dict):
         if server_name not in self.sessions:
             raise RuntimeError(f"MCP server '{server_name}' not connected")
-        return await self.sessions[server_name].call_tool(tool_name, arguments=arguments)
+        return await self.sessions[server_name].call_tool(
+            tool_name, arguments=arguments
+        )
 
     async def disconnect(self):
         """Đóng tất cả kết nối."""
