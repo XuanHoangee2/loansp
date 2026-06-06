@@ -30,8 +30,6 @@ from app.memory.task_memory import TaskMemory
 from app.memory.conversation_memory import ConversationMemory
 from app.memory.memory_service import MemoryService
 
-from app.planner.intent_planner import IntentPlanner
-from app.planner.task_planner import TaskPlanner
 from app.planner.planner_service import PlannerService
 
 from app.validator.validation_service import ValidationService
@@ -43,7 +41,7 @@ from app.executor.result_builder import ResultBuilder
 from app.executor.executor_service import ExecutorService
 from app.executor.mcp_router import MCPRouter
 
-from app.modules.conversation.prompt_template import *
+from app.modules.conversation.prompt_template import system_prompt_extract_LoanAgent, system_prompt_classifier_LoanAgent, system_prompt_conversation_LoanAgent
 
 
 load_dotenv()

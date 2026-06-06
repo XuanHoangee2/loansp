@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 import pytest  # noqa: E402
 
 # Import main AFTER adding backend to path
-from main import app  # noqa: E402
+from ..backend.app.main import app  # noqa: E402
 
 
 @pytest.fixture

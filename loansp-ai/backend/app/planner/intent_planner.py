@@ -36,7 +36,7 @@ class IntentPlanner:
         intent_str = data.get("intent", "general")
         try:
             intent = Intent(intent_str)
-        except ValueError:
+        except json.JSONDecodeError:
             intent = Intent.GENERAL
 
         return IntentResult(

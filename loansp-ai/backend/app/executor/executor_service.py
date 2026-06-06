@@ -1,8 +1,7 @@
 from typing import Any, Dict, List
 
 from app.executor.models import ExecutionResult
-from app.planner.models import PlanResult, PlannedTask
-
+from app.planner.models import PlanResult
 
 class ExecutorService:
     def __init__(self, task_executor, result_builder):

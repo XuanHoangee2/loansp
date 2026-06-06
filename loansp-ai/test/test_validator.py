@@ -1,8 +1,8 @@
-from app.validator.validator import TaskValidator
-from app.validator.models import ValidationResult, ValidationStatus
-from app.validator.tool_requirements import TOOL_REQUIREMENTS
-from app.validator.validation_service import ValidationService
-from app.validator.question_generator import QuestionGenerator
+from ..backend.app.validator.validator import TaskValidator
+from ..backend.app.validator.models import ValidationResult, ValidationStatus
+from ..backend.app.validator.tool_requirements import TOOL_REQUIREMENTS
+from ..backend.app.validator.validation_service import ValidationService
+from ..backend.app.validator.question_generator import QuestionGenerator
 
 
 class TestTaskValidator:
@@ -98,7 +98,7 @@ class TestValidationService:
 
     def test_validate_plan_all_valid(self):
         """Test validation service when all tasks are valid."""
-        from app.planner.models import PlanResult, PlannedTask, TaskType, Intent
+        from ..backend.app.planner.models import PlanResult, PlannedTask, TaskType, Intent
         plan = PlanResult(
             intent=Intent.LOAN_RECOMMENDATION,
             tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")]
@@ -116,7 +116,7 @@ class TestValidationService:
 
     def test_validate_plan_missing_data(self):
         """Test validation service when some tasks have missing data."""
-        from app.planner.models import PlanResult, PlannedTask, TaskType, Intent
+        from ..backend.app.planner.models import PlanResult, PlannedTask, TaskType, Intent
         plan = PlanResult(
             intent=Intent.LOAN_RECOMMENDATION,
             tasks=[PlannedTask(task=TaskType.RECOMMEND_LOAN, reason="user wants loan")]
@@ -129,7 +129,7 @@ class TestValidationService:
 
     def test_build_missing_question(self):
         """Test building missing questions."""
-        from app.validator.models import ValidationResult, ValidationStatus
+        from ..backend.app.validator.models import ValidationResult, ValidationStatus
         validation_result = ValidationResult(
             status=ValidationStatus.MISSING_DATA,
             task="recommend_loan",

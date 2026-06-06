@@ -28,7 +28,7 @@ class TaskPlanner:
             if match:
                 try:
                     data = json.loads(match.group())
-                except:
+                except json.JSONDecodeError:
                     data = {"intent": intent, "tasks": [{"task": "general_response", "reason": "fallback"}]}
             else:
                 data = {"intent": intent, "tasks": [{"task": "general_response", "reason": "fallback"}]}

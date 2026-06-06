@@ -1,14 +1,5 @@
-from langchain_core.messages import AIMessage, HumanMessage
-from .agentstate import LoanAgentState
-from typing import TypedDict, Annotated, List, Optional
-from langchain_core.messages import BaseMessage
-from langgraph.graph import StateGraph, END
-from langgraph.graph.message import add_messages
-from pydantic import BaseModel, Field
-import random
+from langchain_core.messages import AIMessage
 from .question_bank import QUESTION_BANK
-from app.modules.utils.utils import detect_loan_by_keyword
-
 
 # Node 1 Load Memory
 def load_memory_node(memory_service):
