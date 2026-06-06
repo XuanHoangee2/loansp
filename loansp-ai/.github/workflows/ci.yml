@@ -36,7 +36,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff pytest httpx
-          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
 
       - name: Lint with Ruff
         run: |
@@ -47,6 +47,8 @@ jobs:
         run: pytest test/ -v --tb=short
         env:
           GROQ_API: ${{ secrets.GROQ_API || 'dummy-key-for-ci' }}
+          LOAN_MCP_URL: ${{ secrets.LOAN_MCP_URL }}
+          KNOWLEDGE_MCP_URL: ${{ secrets.KNOWLEDGE_MCP_URL }}
           ENVIRONMENT: test
 
   docker-build:
@@ -61,7 +63,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f backend/Dockerfile --target runtime -t loansp-chatbot:ci .
+          docker build -f backend/Dockerfile backend/ --target runtime -t loansp-chatbot:ci
 
       - name: Test container health
         run: |
