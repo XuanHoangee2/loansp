@@ -29,13 +29,13 @@ jobs:
         with:
           python-version: "3.10"
           cache: "pip"
-          cache-dependency-path: loansp-ai/requirements.txt
+          cache-dependency-path: loansp-ai/backend/requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install ruff pytest httpx
-          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
 
       - name: Lint with Ruff
         run: |
@@ -60,19 +60,16 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --target runtime -t loansp-chatbot:ci .
+          docker build backend/ --target runtime -t loansp-chatbot:ci
 
       - name: Test container health
         run: |
-          # Create a minimal .env for the container
           echo "GROQ_API=${{ secrets.GROQ_API || 'dummy-key-for-ci' }}" > .env
           echo "ENVIRONMENT=test" >> .env
           echo "MODEL_NAME=openai/gpt-oss-20b" >> .env
 
-          # Run container in background
           docker run -d --name test-chatbot -p 8000:8000 --env-file .env loansp-chatbot:ci
 
-          # Wait for health endpoint (max 60s)
           for i in {1..30}; do
             if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
               echo "Health check passed"
