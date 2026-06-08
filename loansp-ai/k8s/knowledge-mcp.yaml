@@ -3,45 +3,49 @@ kind: Deployment
 metadata:
   name: knowledge-mcp
 spec:
-replicas: 1
-selector:
-matchLabels:
-app: knowledge-mcp
-template:
-metadata:
-labels:
-app: knowledge-mcp
-spec:
-containers:
-- name: knowledge-mcp
-image: hoangee2/knowledge-mcp:v1
-ports:
-- containerPort: 8000
-
-
-    env:
-    - name: PYTHONUNBUFFERED
-      value: "1"
-
-    readinessProbe:
-      httpGet:
-        path: /sse
-        port: 8000
-      initialDelaySeconds: 10
-      periodSeconds: 10
-
-
+  replicas: 1
+  selector:
+    matchLabels:
+      app: knowledge-mcp
+  template:
+    metadata:
+      labels:
+        app: knowledge-mcp
+    spec:
+      containers:
+      - name: knowledge-mcp
+        image: hoangee2/knowledge-mcp:v1
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PYTHONUNBUFFERED
+          value: '1'
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-name: knowledge-mcp
+  name: knowledge-mcp
 spec:
-selector:
-app: knowledge-mcp
-ports:
-
-* port: 8000
-  targetPort: 8000
+  selector:
+    app: knowledge-mcp
+  ports:
+  - port: 8000
+    targetPort: 8000
   type: ClusterIP

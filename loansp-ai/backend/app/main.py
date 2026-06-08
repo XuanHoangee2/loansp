@@ -62,13 +62,16 @@ async def lifespan(app: FastAPI):
     # Embedding
     # app.state.embedding = download_embeddings()
     try:
-        # Validate GROQ_API key
+        # Validate GROQ_API key (skip validation in CI/testing mode)
         groq_api_key = os.getenv("GROQ_API")
-        if not groq_api_key or not groq_api_key.startswith("gsk_"):
-            raise ValueError(
-                "GROQ_API environment variable is missing or invalid. "
-                "Please set a valid Groq API key (starts with 'gsk_')."
-            )
+        env = os.getenv("ENVIRONMENT", "production")
+        is_ci = os.getenv("CI", "").lower() in ("true", "1", "yes")
+        if env not in ("development", "test") and not is_ci:
+            if not groq_api_key or not groq_api_key.startswith("gsk_"):
+                raise ValueError(
+                    "GROQ_API environment variable is missing or invalid. "
+                    "Please set a valid Groq API key (starts with 'gsk_')."
+                )
 
         # LLM
         app.state.llm = ChatGroq(

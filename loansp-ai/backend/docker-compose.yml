@@ -14,7 +14,6 @@ services:
       # Lấy từ file .env (không hardcode trong file này)
       - GROQ_API=${GROQ_API}
       - ENVIRONMENT=${ENVIRONMENT:-production}
-      - MODEL_NAME=${MODEL_NAME:-openai/gpt-oss-20b}
     env_file:
       - .env  # Load toàn bộ biến từ .env
     volumes:

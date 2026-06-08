@@ -190,8 +190,17 @@ class ResultBuilder:
         if not user_query:
             return False
         listing_keywords = [
-            "các", "danh sách", "những", "list", "gói nào", "hiện có",
-            "tất cả", "bao nhiêu gói", "mấy gói", "có gì", "có những",
+            "các",
+            "danh sách",
+            "những",
+            "list",
+            "gói nào",
+            "hiện có",
+            "tất cả",
+            "bao nhiêu gói",
+            "mấy gói",
+            "có gì",
+            "có những",
         ]
         q = user_query.lower()
         return any(k in q for k in listing_keywords)
@@ -207,7 +216,12 @@ class ResultBuilder:
                 fallback_outputs.append(f"Lỗi: {result.error}")
                 continue
 
-            if result.task in ("faq_search", "policy_search", "recommend_loan", "compare_products"):
+            if result.task in (
+                "faq_search",
+                "policy_search",
+                "recommend_loan",
+                "compare_products",
+            ):
                 if not self._is_not_found(result):
                     rich_results.append(result)
                 else:
@@ -277,11 +291,17 @@ class ResultBuilder:
             # Multi-task or combined: use LLM to synthesize everything
             combined_contexts = list(rich_contexts)
             if calc_outputs:
-                combined_contexts.append("Phân tích tài chính:\n  " + "\n  ".join(calc_outputs))
+                combined_contexts.append(
+                    "Phân tích tài chính:\n  " + "\n  ".join(calc_outputs)
+                )
             if fallback_outputs:
-                combined_contexts.append("Thông tin bổ sung:\n  " + "\n  ".join(fallback_outputs))
+                combined_contexts.append(
+                    "Thông tin bổ sung:\n  " + "\n  ".join(fallback_outputs)
+                )
 
-            llm_response = await self._build_multi_with_llm(combined_contexts, user_query)
+            llm_response = await self._build_multi_with_llm(
+                combined_contexts, user_query
+            )
             if llm_response:
                 return llm_response
 
@@ -323,14 +343,22 @@ class ResultBuilder:
         elif fallback_outputs:
             # Handle not-found fallbacks
             not_found_count = sum(
-                1 for f in fallback_outputs if f in ("faq_not_found", "policy_not_found", "recommend_not_found")
+                1
+                for f in fallback_outputs
+                if f in ("faq_not_found", "policy_not_found", "recommend_not_found")
             )
             if not_found_count > 0:
                 llm_response = await self._build_fallback_llm(user_query)
                 if llm_response:
                     return llm_response
-            return "\n\n".join(
-                f for f in fallback_outputs if f not in ("faq_not_found", "policy_not_found", "recommend_not_found")
-            ) or "Xin lỗi, tôi chưa có thông tin để trả lời."
+            return (
+                "\n\n".join(
+                    f
+                    for f in fallback_outputs
+                    if f
+                    not in ("faq_not_found", "policy_not_found", "recommend_not_found")
+                )
+                or "Xin lỗi, tôi chưa có thông tin để trả lời."
+            )
 
         return "Xin lỗi, tôi chưa hiểu yêu cầu của bạn."

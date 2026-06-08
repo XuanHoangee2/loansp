@@ -141,30 +141,318 @@ class TaskExecutor:
         elif task_name == "recommend_loan":
             # Fallback local product recommendation
             _LOCAL_PRODUCTS = [
-                {"id": "vib-home-001", "bank": "VIB", "name": "VIB Home Loan", "purpose": "mua_nha", "min_income": 10000000, "max_amount": 10000000000, "max_year": 25, "interest_rate": 6.5, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà/đất với lãi suất ưu đãi 6.5%/năm, thời hạn đến 25 năm."},
-                {"id": "vib-car-001", "bank": "VIB", "name": "VIB Car Loan", "purpose": "mua_xe", "min_income": 8000000, "max_amount": 2000000000, "max_year": 7, "interest_rate": 7.5, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua ô tô/xe máy với lãi suất 7.5%/năm, thời hạn đến 7 năm."},
-                {"id": "vib-consumer-001", "bank": "VIB", "name": "VIB Consumer Loan", "purpose": "tieu_dung", "min_income": 5000000, "max_amount": 500000000, "max_year": 5, "interest_rate": 10.0, "ltv_limit": 0.0, "dti_limit": 0.5, "description": "Vay tiêu dùng không tài sản đảm bảo, lãi suất 10%/năm."},
-                {"id": "vib-biz-001", "bank": "VIB", "name": "VIB Business Loan", "purpose": "kinh_doanh", "min_income": 15000000, "max_amount": 5000000000, "max_year": 10, "interest_rate": 8.0, "ltv_limit": 0.7, "dti_limit": 0.45, "description": "Vay kinh doanh với lãi suất 8%/năm, thời hạn đến 10 năm."},
-                {"id": "tech-home-001", "bank": "Techcombank", "name": "Techcombank Home Loan", "purpose": "mua_nha", "min_income": 12000000, "max_amount": 15000000000, "max_year": 30, "interest_rate": 6.2, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà với lãi suất ưu đãi 6.2%/năm, thời hạn đến 30 năm."},
-                {"id": "tech-biz-001", "bank": "Techcombank", "name": "Techcombank SME Loan", "purpose": "kinh_doanh", "min_income": 20000000, "max_amount": 10000000000, "max_year": 10, "interest_rate": 7.5, "ltv_limit": 0.7, "dti_limit": 0.45, "description": "Vay kinh doanh SME với lãi suất 7.5%/năm, thời hạn đến 10 năm."},
-                {"id": "tech-car-001", "bank": "Techcombank", "name": "Techcombank Auto Loan", "purpose": "mua_xe", "min_income": 10000000, "max_amount": 3000000000, "max_year": 8, "interest_rate": 6.8, "ltv_limit": 0.85, "dti_limit": 0.4, "description": "Vay mua ô tô lãi suất 6.8%/năm, thời hạn đến 8 năm, LTV lên đến 85%."},
-                {"id": "vcb-home-001", "bank": "Vietcombank", "name": "Vietcombank Home Plus", "purpose": "mua_nha", "min_income": 15000000, "max_amount": 20000000000, "max_year": 25, "interest_rate": 6.0, "ltv_limit": 0.75, "dti_limit": 0.4, "description": "Vay mua nhà lãi suất 6.0%/năm, thời hạn đến 25 năm, hạn mức lên đến 20 tỷ."},
-                {"id": "vcb-car-001", "bank": "Vietcombank", "name": "Vietcombank Auto Plus", "purpose": "mua_xe", "min_income": 12000000, "max_amount": 2500000000, "max_year": 7, "interest_rate": 7.0, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua ô tô lãi suất 7.0%/năm, thời hạn đến 7 năm."},
-                {"id": "vcb-consumer-001", "bank": "Vietcombank", "name": "Vietcombank Cash Plus", "purpose": "tieu_dung", "min_income": 7000000, "max_amount": 300000000, "max_year": 4, "interest_rate": 9.5, "ltv_limit": 0.0, "dti_limit": 0.5, "description": "Vay tiêu dùng không tài sản đảm bảo, lãi suất 9.5%/năm."},
-                {"id": "vcb-biz-001", "bank": "Vietcombank", "name": "Vietcombank Business Pro", "purpose": "kinh_doanh", "min_income": 25000000, "max_amount": 15000000000, "max_year": 12, "interest_rate": 7.2, "ltv_limit": 0.75, "dti_limit": 0.45, "description": "Vay kinh doanh lãi suất 7.2%/năm, thời hạn đến 12 năm."},
-                {"id": "acb-home-001", "bank": "ACB", "name": "ACB Dream Home", "purpose": "mua_nha", "min_income": 10000000, "max_amount": 12000000000, "max_year": 20, "interest_rate": 6.8, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà lãi suất 6.8%/năm, thời hạn đến 20 năm."},
-                {"id": "acb-car-001", "bank": "ACB", "name": "ACB Auto Dream", "purpose": "mua_xe", "min_income": 8000000, "max_amount": 1800000000, "max_year": 6, "interest_rate": 7.8, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua xe lãi suất 7.8%/năm, thời hạn đến 6 năm."},
-                {"id": "acb-consumer-001", "bank": "ACB", "name": "ACB Easy Cash", "purpose": "tieu_dung", "min_income": 5000000, "max_amount": 500000000, "max_year": 5, "interest_rate": 10.5, "ltv_limit": 0.0, "dti_limit": 0.5, "description": "Vay tiêu dùng nhanh, lãi suất 10.5%/năm."},
-                {"id": "vpb-home-001", "bank": "VPBank", "name": "VPBank Home Sweet", "purpose": "mua_nha", "min_income": 12000000, "max_amount": 10000000000, "max_year": 25, "interest_rate": 6.3, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà lãi suất 6.3%/năm, thời hạn đến 25 năm."},
-                {"id": "vpb-car-001", "bank": "VPBank", "name": "VPBank Auto Pro", "purpose": "mua_xe", "min_income": 9000000, "max_amount": 2000000000, "max_year": 7, "interest_rate": 7.2, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua ô tô lãi suất 7.2%/năm, thời hạn đến 7 năm."},
-                {"id": "vpb-biz-001", "bank": "VPBank", "name": "VPBank SME Growth", "purpose": "kinh_doanh", "min_income": 18000000, "max_amount": 8000000000, "max_year": 10, "interest_rate": 7.8, "ltv_limit": 0.7, "dti_limit": 0.45, "description": "Vay kinh doanh SME lãi suất 7.8%/năm, thời hạn đến 10 năm."},
-                {"id": "bidv-home-001", "bank": "BIDV", "name": "BIDV Home Loan", "purpose": "mua_nha", "min_income": 11000000, "max_amount": 15000000000, "max_year": 25, "interest_rate": 6.1, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà lãi suất 6.1%/năm, thời hạn đến 25 năm."},
-                {"id": "bidv-car-001", "bank": "BIDV", "name": "BIDV Auto Loan", "purpose": "mua_xe", "min_income": 9000000, "max_amount": 2000000000, "max_year": 7, "interest_rate": 7.0, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua ô tô lãi suất 7.0%/năm, thời hạn đến 7 năm."},
-                {"id": "bidv-biz-001", "bank": "BIDV", "name": "BIDV Business Loan", "purpose": "kinh_doanh", "min_income": 20000000, "max_amount": 10000000000, "max_year": 10, "interest_rate": 7.5, "ltv_limit": 0.7, "dti_limit": 0.45, "description": "Vay kinh doanh lãi suất 7.5%/năm, thời hạn đến 10 năm."},
-                {"id": "mb-home-001", "bank": "MB Bank", "name": "MB Home Dream", "purpose": "mua_nha", "min_income": 10000000, "max_amount": 10000000000, "max_year": 25, "interest_rate": 6.4, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua nhà lãi suất 6.4%/năm, thời hạn đến 25 năm."},
-                {"id": "mb-car-001", "bank": "MB Bank", "name": "MB Auto Dream", "purpose": "mua_xe", "min_income": 8000000, "max_amount": 2000000000, "max_year": 7, "interest_rate": 7.3, "ltv_limit": 0.8, "dti_limit": 0.4, "description": "Vay mua ô tô lãi suất 7.3%/năm, thời hạn đến 7 năm."},
-                {"id": "mb-consumer-001", "bank": "MB Bank", "name": "MB Easy Cash", "purpose": "tieu_dung", "min_income": 5000000, "max_amount": 400000000, "max_year": 5, "interest_rate": 10.0, "ltv_limit": 0.0, "dti_limit": 0.5, "description": "Vay tiêu dùng nhanh, lãi suất 10.0%/năm."},
-                {"id": "mb-biz-001", "bank": "MB Bank", "name": "MB Business Plus", "purpose": "kinh_doanh", "min_income": 15000000, "max_amount": 6000000000, "max_year": 10, "interest_rate": 7.9, "ltv_limit": 0.7, "dti_limit": 0.45, "description": "Vay kinh doanh lãi suất 7.9%/năm, thời hạn đến 10 năm."},
+                {
+                    "id": "vib-home-001",
+                    "bank": "VIB",
+                    "name": "VIB Home Loan",
+                    "purpose": "mua_nha",
+                    "min_income": 10000000,
+                    "max_amount": 10000000000,
+                    "max_year": 25,
+                    "interest_rate": 6.5,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà/đất với lãi suất ưu đãi 6.5%/năm, thời hạn đến 25 năm.",
+                },
+                {
+                    "id": "vib-car-001",
+                    "bank": "VIB",
+                    "name": "VIB Car Loan",
+                    "purpose": "mua_xe",
+                    "min_income": 8000000,
+                    "max_amount": 2000000000,
+                    "max_year": 7,
+                    "interest_rate": 7.5,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô/xe máy với lãi suất 7.5%/năm, thời hạn đến 7 năm.",
+                },
+                {
+                    "id": "vib-consumer-001",
+                    "bank": "VIB",
+                    "name": "VIB Consumer Loan",
+                    "purpose": "tieu_dung",
+                    "min_income": 5000000,
+                    "max_amount": 500000000,
+                    "max_year": 5,
+                    "interest_rate": 10.0,
+                    "ltv_limit": 0.0,
+                    "dti_limit": 0.5,
+                    "description": "Vay tiêu dùng không tài sản đảm bảo, lãi suất 10%/năm.",
+                },
+                {
+                    "id": "vib-biz-001",
+                    "bank": "VIB",
+                    "name": "VIB Business Loan",
+                    "purpose": "kinh_doanh",
+                    "min_income": 15000000,
+                    "max_amount": 5000000000,
+                    "max_year": 10,
+                    "interest_rate": 8.0,
+                    "ltv_limit": 0.7,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh với lãi suất 8%/năm, thời hạn đến 10 năm.",
+                },
+                {
+                    "id": "tech-home-001",
+                    "bank": "Techcombank",
+                    "name": "Techcombank Home Loan",
+                    "purpose": "mua_nha",
+                    "min_income": 12000000,
+                    "max_amount": 15000000000,
+                    "max_year": 30,
+                    "interest_rate": 6.2,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà với lãi suất ưu đãi 6.2%/năm, thời hạn đến 30 năm.",
+                },
+                {
+                    "id": "tech-biz-001",
+                    "bank": "Techcombank",
+                    "name": "Techcombank SME Loan",
+                    "purpose": "kinh_doanh",
+                    "min_income": 20000000,
+                    "max_amount": 10000000000,
+                    "max_year": 10,
+                    "interest_rate": 7.5,
+                    "ltv_limit": 0.7,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh SME với lãi suất 7.5%/năm, thời hạn đến 10 năm.",
+                },
+                {
+                    "id": "tech-car-001",
+                    "bank": "Techcombank",
+                    "name": "Techcombank Auto Loan",
+                    "purpose": "mua_xe",
+                    "min_income": 10000000,
+                    "max_amount": 3000000000,
+                    "max_year": 8,
+                    "interest_rate": 6.8,
+                    "ltv_limit": 0.85,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô lãi suất 6.8%/năm, thời hạn đến 8 năm, LTV lên đến 85%.",
+                },
+                {
+                    "id": "vcb-home-001",
+                    "bank": "Vietcombank",
+                    "name": "Vietcombank Home Plus",
+                    "purpose": "mua_nha",
+                    "min_income": 15000000,
+                    "max_amount": 20000000000,
+                    "max_year": 25,
+                    "interest_rate": 6.0,
+                    "ltv_limit": 0.75,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà lãi suất 6.0%/năm, thời hạn đến 25 năm, hạn mức lên đến 20 tỷ.",
+                },
+                {
+                    "id": "vcb-car-001",
+                    "bank": "Vietcombank",
+                    "name": "Vietcombank Auto Plus",
+                    "purpose": "mua_xe",
+                    "min_income": 12000000,
+                    "max_amount": 2500000000,
+                    "max_year": 7,
+                    "interest_rate": 7.0,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô lãi suất 7.0%/năm, thời hạn đến 7 năm.",
+                },
+                {
+                    "id": "vcb-consumer-001",
+                    "bank": "Vietcombank",
+                    "name": "Vietcombank Cash Plus",
+                    "purpose": "tieu_dung",
+                    "min_income": 7000000,
+                    "max_amount": 300000000,
+                    "max_year": 4,
+                    "interest_rate": 9.5,
+                    "ltv_limit": 0.0,
+                    "dti_limit": 0.5,
+                    "description": "Vay tiêu dùng không tài sản đảm bảo, lãi suất 9.5%/năm.",
+                },
+                {
+                    "id": "vcb-biz-001",
+                    "bank": "Vietcombank",
+                    "name": "Vietcombank Business Pro",
+                    "purpose": "kinh_doanh",
+                    "min_income": 25000000,
+                    "max_amount": 15000000000,
+                    "max_year": 12,
+                    "interest_rate": 7.2,
+                    "ltv_limit": 0.75,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh lãi suất 7.2%/năm, thời hạn đến 12 năm.",
+                },
+                {
+                    "id": "acb-home-001",
+                    "bank": "ACB",
+                    "name": "ACB Dream Home",
+                    "purpose": "mua_nha",
+                    "min_income": 10000000,
+                    "max_amount": 12000000000,
+                    "max_year": 20,
+                    "interest_rate": 6.8,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà lãi suất 6.8%/năm, thời hạn đến 20 năm.",
+                },
+                {
+                    "id": "acb-car-001",
+                    "bank": "ACB",
+                    "name": "ACB Auto Dream",
+                    "purpose": "mua_xe",
+                    "min_income": 8000000,
+                    "max_amount": 1800000000,
+                    "max_year": 6,
+                    "interest_rate": 7.8,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua xe lãi suất 7.8%/năm, thời hạn đến 6 năm.",
+                },
+                {
+                    "id": "acb-consumer-001",
+                    "bank": "ACB",
+                    "name": "ACB Easy Cash",
+                    "purpose": "tieu_dung",
+                    "min_income": 5000000,
+                    "max_amount": 500000000,
+                    "max_year": 5,
+                    "interest_rate": 10.5,
+                    "ltv_limit": 0.0,
+                    "dti_limit": 0.5,
+                    "description": "Vay tiêu dùng nhanh, lãi suất 10.5%/năm.",
+                },
+                {
+                    "id": "vpb-home-001",
+                    "bank": "VPBank",
+                    "name": "VPBank Home Sweet",
+                    "purpose": "mua_nha",
+                    "min_income": 12000000,
+                    "max_amount": 10000000000,
+                    "max_year": 25,
+                    "interest_rate": 6.3,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà lãi suất 6.3%/năm, thời hạn đến 25 năm.",
+                },
+                {
+                    "id": "vpb-car-001",
+                    "bank": "VPBank",
+                    "name": "VPBank Auto Pro",
+                    "purpose": "mua_xe",
+                    "min_income": 9000000,
+                    "max_amount": 2000000000,
+                    "max_year": 7,
+                    "interest_rate": 7.2,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô lãi suất 7.2%/năm, thời hạn đến 7 năm.",
+                },
+                {
+                    "id": "vpb-biz-001",
+                    "bank": "VPBank",
+                    "name": "VPBank SME Growth",
+                    "purpose": "kinh_doanh",
+                    "min_income": 18000000,
+                    "max_amount": 8000000000,
+                    "max_year": 10,
+                    "interest_rate": 7.8,
+                    "ltv_limit": 0.7,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh SME lãi suất 7.8%/năm, thời hạn đến 10 năm.",
+                },
+                {
+                    "id": "bidv-home-001",
+                    "bank": "BIDV",
+                    "name": "BIDV Home Loan",
+                    "purpose": "mua_nha",
+                    "min_income": 11000000,
+                    "max_amount": 15000000000,
+                    "max_year": 25,
+                    "interest_rate": 6.1,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà lãi suất 6.1%/năm, thời hạn đến 25 năm.",
+                },
+                {
+                    "id": "bidv-car-001",
+                    "bank": "BIDV",
+                    "name": "BIDV Auto Loan",
+                    "purpose": "mua_xe",
+                    "min_income": 9000000,
+                    "max_amount": 2000000000,
+                    "max_year": 7,
+                    "interest_rate": 7.0,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô lãi suất 7.0%/năm, thời hạn đến 7 năm.",
+                },
+                {
+                    "id": "bidv-biz-001",
+                    "bank": "BIDV",
+                    "name": "BIDV Business Loan",
+                    "purpose": "kinh_doanh",
+                    "min_income": 20000000,
+                    "max_amount": 10000000000,
+                    "max_year": 10,
+                    "interest_rate": 7.5,
+                    "ltv_limit": 0.7,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh lãi suất 7.5%/năm, thời hạn đến 10 năm.",
+                },
+                {
+                    "id": "mb-home-001",
+                    "bank": "MB Bank",
+                    "name": "MB Home Dream",
+                    "purpose": "mua_nha",
+                    "min_income": 10000000,
+                    "max_amount": 10000000000,
+                    "max_year": 25,
+                    "interest_rate": 6.4,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua nhà lãi suất 6.4%/năm, thời hạn đến 25 năm.",
+                },
+                {
+                    "id": "mb-car-001",
+                    "bank": "MB Bank",
+                    "name": "MB Auto Dream",
+                    "purpose": "mua_xe",
+                    "min_income": 8000000,
+                    "max_amount": 2000000000,
+                    "max_year": 7,
+                    "interest_rate": 7.3,
+                    "ltv_limit": 0.8,
+                    "dti_limit": 0.4,
+                    "description": "Vay mua ô tô lãi suất 7.3%/năm, thời hạn đến 7 năm.",
+                },
+                {
+                    "id": "mb-consumer-001",
+                    "bank": "MB Bank",
+                    "name": "MB Easy Cash",
+                    "purpose": "tieu_dung",
+                    "min_income": 5000000,
+                    "max_amount": 400000000,
+                    "max_year": 5,
+                    "interest_rate": 10.0,
+                    "ltv_limit": 0.0,
+                    "dti_limit": 0.5,
+                    "description": "Vay tiêu dùng nhanh, lãi suất 10.0%/năm.",
+                },
+                {
+                    "id": "mb-biz-001",
+                    "bank": "MB Bank",
+                    "name": "MB Business Plus",
+                    "purpose": "kinh_doanh",
+                    "min_income": 15000000,
+                    "max_amount": 6000000000,
+                    "max_year": 10,
+                    "interest_rate": 7.9,
+                    "ltv_limit": 0.7,
+                    "dti_limit": 0.45,
+                    "description": "Vay kinh doanh lãi suất 7.9%/năm, thời hạn đến 10 năm.",
+                },
             ]
             income = profile.get("income", 0)
             loan_purpose = profile.get("loan_purpose", "")
@@ -185,7 +473,9 @@ class TaskExecutor:
                     score += 20
                 else:
                     score -= 40
-                    reasons.append(f"Thu nhập thấp hơn yêu cầu tối thiểu {p['min_income']:,} VNĐ")
+                    reasons.append(
+                        f"Thu nhập thấp hơn yêu cầu tối thiểu {p['min_income']:,} VNĐ"
+                    )
                 if loan_amount <= p["max_amount"]:
                     score += 15
                 else:
@@ -212,7 +502,11 @@ class TaskExecutor:
                 return ExecutionResult(
                     task=task_name,
                     success=True,
-                    data={"products": [], "best_match": None, "reasoning": "Không có sản phẩm local để gợi ý."},
+                    data={
+                        "products": [],
+                        "best_match": None,
+                        "reasoning": "Không có sản phẩm local để gợi ý.",
+                    },
                 )
 
             best = top_products[0]["product"]
@@ -282,9 +576,13 @@ class TaskExecutor:
                 local_results = []
                 for item in data_pool:
                     score = 0
-                    if any(word in item["question"].lower() for word in query_lower.split()):
+                    if any(
+                        word in item["question"].lower() for word in query_lower.split()
+                    ):
                         score += 2
-                    if any(word in item["answer"].lower() for word in query_lower.split()):
+                    if any(
+                        word in item["answer"].lower() for word in query_lower.split()
+                    ):
                         score += 1
                     if score > 0:
                         local_results.append({"score": score, "item": item})
@@ -301,28 +599,70 @@ class TaskExecutor:
                 return ExecutionResult(
                     task=task_name,
                     success=True,
-                    data={"answers": answers, "sources": ["local_fallback"], "found": bool(answers[0].get("found", True))},
+                    data={
+                        "answers": answers,
+                        "sources": ["local_fallback"],
+                        "found": bool(answers[0].get("found", True)),
+                    },
                 )
             else:
                 data_pool = [
-                    {"category": "interest", "title": "Quy định lãi suất vay mua nhà", "content": "Lãi suất vay mua nhà áp dụng theo thỏa thuận giữa ngân hàng và khách hàng. Lãi suất ưu đãi áp dụng trong 12-24 tháng đầu, sau đó chuyển sang lãi suất thả nổi theo thị trường."},
-                    {"category": "fee", "title": "Phí trả nợ trước hạn", "content": "Phí trả nợ trước hạn: 1-3% số tiền trả trước hạn nếu trả trong 1-3 năm đầu. Sau 3 năm không tính phí."},
-                    {"category": "requirement", "title": "Yêu cầu thu nhập tối thiểu", "content": "Thu nhập tối thiểu phụ thuộc gói vay: mua nhà 10tr/tháng, mua xe 8tr/tháng, tiêu dùng 5tr/tháng, kinh doanh 15tr/tháng."},
-                    {"category": "process", "title": "Quy trình xét duyệt vay mua nhà", "content": "Bước 1: Nộp hồ sơ. Bước 2: Thẩm định tài sản và thu nhập. Bước 3: Phê duyệt (3-7 ngày). Bước 4: Ký hợp đồng. Bước 5: Giải ngân."},
-                    {"category": "requirement", "title": "Yêu cầu độ tuổi", "content": "Độ tuổi từ 20-60 tại thời điểm vay. Tuổi cộng thời hạn vay không vượt quá 65."},
-                    {"category": "fee", "title": "Phí thẩm định tài sản", "content": "Phí thẩm định: 0.1-0.2% giá trị tài sản, tối thiểu 500,000 VNĐ. Khách hàng chịu chi phí."},
-                    {"category": "interest", "title": "Lãi suất thả nổi", "content": "Lãi suất thả nổi = Lãi suất tham chiếu (VD: SBV rate) + Biên độ (2-4%). Điều chỉnh 6 tháng/lần."},
-                    {"category": "process", "title": "Thời gian giải ngân", "content": "Thời gian giải ngân từ 7-15 ngày làm việc sau khi hồ sơ đầy đủ. Trường hợp phức tạp có thể kéo dài đến 30 ngày."},
+                    {
+                        "category": "interest",
+                        "title": "Quy định lãi suất vay mua nhà",
+                        "content": "Lãi suất vay mua nhà áp dụng theo thỏa thuận giữa ngân hàng và khách hàng. Lãi suất ưu đãi áp dụng trong 12-24 tháng đầu, sau đó chuyển sang lãi suất thả nổi theo thị trường.",
+                    },
+                    {
+                        "category": "fee",
+                        "title": "Phí trả nợ trước hạn",
+                        "content": "Phí trả nợ trước hạn: 1-3% số tiền trả trước hạn nếu trả trong 1-3 năm đầu. Sau 3 năm không tính phí.",
+                    },
+                    {
+                        "category": "requirement",
+                        "title": "Yêu cầu thu nhập tối thiểu",
+                        "content": "Thu nhập tối thiểu phụ thuộc gói vay: mua nhà 10tr/tháng, mua xe 8tr/tháng, tiêu dùng 5tr/tháng, kinh doanh 15tr/tháng.",
+                    },
+                    {
+                        "category": "process",
+                        "title": "Quy trình xét duyệt vay mua nhà",
+                        "content": "Bước 1: Nộp hồ sơ. Bước 2: Thẩm định tài sản và thu nhập. Bước 3: Phê duyệt (3-7 ngày). Bước 4: Ký hợp đồng. Bước 5: Giải ngân.",
+                    },
+                    {
+                        "category": "requirement",
+                        "title": "Yêu cầu độ tuổi",
+                        "content": "Độ tuổi từ 20-60 tại thời điểm vay. Tuổi cộng thời hạn vay không vượt quá 65.",
+                    },
+                    {
+                        "category": "fee",
+                        "title": "Phí thẩm định tài sản",
+                        "content": "Phí thẩm định: 0.1-0.2% giá trị tài sản, tối thiểu 500,000 VNĐ. Khách hàng chịu chi phí.",
+                    },
+                    {
+                        "category": "interest",
+                        "title": "Lãi suất thả nổi",
+                        "content": "Lãi suất thả nổi = Lãi suất tham chiếu (VD: SBV rate) + Biên độ (2-4%). Điều chỉnh 6 tháng/lần.",
+                    },
+                    {
+                        "category": "process",
+                        "title": "Thời gian giải ngân",
+                        "content": "Thời gian giải ngân từ 7-15 ngày làm việc sau khi hồ sơ đầy đủ. Trường hợp phức tạp có thể kéo dài đến 30 ngày.",
+                    },
                 ]
                 query_lower = query.lower()
                 local_results = []
                 for item in data_pool:
                     score = 0
-                    if any(word in item["title"].lower() for word in query_lower.split()):
+                    if any(
+                        word in item["title"].lower() for word in query_lower.split()
+                    ):
                         score += 3
-                    if any(word in item["content"].lower() for word in query_lower.split()):
+                    if any(
+                        word in item["content"].lower() for word in query_lower.split()
+                    ):
                         score += 2
-                    if any(word in item["category"].lower() for word in query_lower.split()):
+                    if any(
+                        word in item["category"].lower() for word in query_lower.split()
+                    ):
                         score += 1
                     if score > 0:
                         local_results.append({"score": score, "item": item})
@@ -339,7 +679,11 @@ class TaskExecutor:
                 return ExecutionResult(
                     task=task_name,
                     success=True,
-                    data={"policies": policies, "effective_date": "2026-01-01", "found": bool(policies[0].get("found", True))},
+                    data={
+                        "policies": policies,
+                        "effective_date": "2026-01-01",
+                        "found": bool(policies[0].get("found", True)),
+                    },
                 )
 
         elif task_name == "general_response":
