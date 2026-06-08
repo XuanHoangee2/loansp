@@ -22,6 +22,8 @@ class TaskType(str, Enum):
     CALCULATE_LTV = "calculate_ltv"
     ESTIMATE_PAYMENT = "estimate_payment"
     FAQ_SEARCH = "faq_search"
+    POLICY_SEARCH = "policy_search"
+    COMPARE_PRODUCTS = "compare_products"
     GENERAL_RESPONSE = "general_response"
 
 

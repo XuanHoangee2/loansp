@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-mcp
+  template:
+    metadata:
+      labels:
+        app: product-mcp
+    spec:
+      containers:
+      - name: product-mcp
+        image: hoangee2/product-mcp:v1
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PYTHONUNBUFFERED
+          value: '1'
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-mcp
+spec:
+  selector:
+    app: product-mcp
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP

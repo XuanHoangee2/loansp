@@ -25,3 +25,5 @@ class CustomerProfile(BaseModel):
     loan_purpose: Optional[str] = None
 
     language: str = "vi"
+
+    last_query: Optional[str] = None

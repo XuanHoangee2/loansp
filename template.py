@@ -76,6 +76,12 @@ list_of_file = [
     f"{project_name}/knowledge_mcp_server/services/rerank_service.py",
     f"{project_name}/knowledge_mcp_server/server.py",
 
+    f"{project_name}/k8s/backend.yaml",
+    f"{project_name}/k8s/redis.yaml",
+    f"{project_name}/k8s/loan-calc-mcp.yaml",
+    f"{project_name}/k8s/product-mcp.yaml",
+    f"{project_name}/k8s/knowledge-mcp.yaml",
+
     f".github/workflows/ci.yml",
     f"{project_name}/.env",
     ".gitignore",

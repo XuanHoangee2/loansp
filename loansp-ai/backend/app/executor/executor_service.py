@@ -29,7 +29,10 @@ class ExecutorService:
             )
             execution_results.append(result)
 
-        response = self.result_builder.build(execution_results)
+        response = await self.result_builder.build(
+            execution_results,
+            user_query=customer_profile.get("last_query", ""),
+        )
 
         return {
             "response": response,

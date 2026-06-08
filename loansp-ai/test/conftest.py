@@ -8,7 +8,7 @@ backend_path = str(Path(__file__).resolve().parent.parent / "backend")
 if backend_path not in sys.path:
     sys.path.insert(0, backend_path)
 
-os.environ.setdefault("GROQ_API", "dummy-groq-api-key-for-tests")
+os.environ.setdefault("GROQ_API", "gsk_dummy_key_for_tests")
 
 from fastapi.testclient import TestClient  # noqa: E402
 import pytest  # noqa: E402

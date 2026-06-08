@@ -59,7 +59,7 @@ def _initialize_graph(
 
     workflow.add_node("ask_missing", ask_missing_node(memory_service))
 
-    workflow.add_node("executor", executor_node(executor_service))
+    workflow.add_node("executor", executor_node(executor_service, ai_service))
 
     workflow.add_node("clear_task", clear_task_node(memory_service))
 
