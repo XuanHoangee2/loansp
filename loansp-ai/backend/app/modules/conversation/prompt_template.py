@@ -44,7 +44,7 @@ Money units:
 - million = 1,000,000
 - billion = 1,000,000,000
 
-Return structured output only.
+Return structured JSON output only.
 """
 
 system_prompt_classifier_LoanAgent = """
@@ -53,7 +53,7 @@ You are a loan-intent classifier.
 Task:
 Determine whether the user's message is related to loan services.
 
-Return only:
+Return JSON output only:
 True
 or
 False

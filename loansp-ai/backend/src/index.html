@@ -115,14 +115,20 @@
                         $('.msg_card_body').scrollTop($('.msg_card_body')[0].scrollHeight);
                     },
                     error: function(xhr, status, error) {
-                        console.error("Error:", error);
+                        console.error("Error:", xhr.status, error);
+                        
+                        // Extract detail message from backend if available
+                        var errorMsg = "Sorry, there was an error processing your request. Please try again.";
+                        if (xhr.responseJSON && xhr.responseJSON.detail) {
+                            errorMsg = xhr.responseJSON.detail;
+                        }
                         
                         var errorHtml = '<div class="d-flex justify-content-start mb-4">' +
                                         '<div class="img_cont_msg">' +
                                         '<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="rounded-circle user_img_msg">' +
                                         '</div>' +
-                                        '<div class="msg_cotainer">' + 
-                                        'Sorry, there was an error processing your request. Please try again.' +
+                                        '<div class="msg_cotainer error-msg">' + 
+                                        errorMsg +
                                         '<span class="msg_time">' + str_time + '</span></div></div>';
                         
                         $("#messageFormeight").append(errorHtml);

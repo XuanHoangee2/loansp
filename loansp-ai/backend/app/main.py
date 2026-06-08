@@ -62,17 +62,29 @@ async def lifespan(app: FastAPI):
     # Embedding
     # app.state.embedding = download_embeddings()
     try:
+        # Validate GROQ_API key
+        groq_api_key = os.getenv("GROQ_API")
+        if not groq_api_key or not groq_api_key.startswith("gsk_"):
+            raise ValueError(
+                "GROQ_API environment variable is missing or invalid. "
+                "Please set a valid Groq API key (starts with 'gsk_')."
+            )
+
         # LLM
         app.state.llm = ChatGroq(
-            model="openai/gpt-oss-20b",
+            model="llama-3.3-70b-versatile",
             temperature=0.7,
-            groq_api_key=os.getenv("GROQ_API"),
+            groq_api_key=groq_api_key,
         )
         #################################################################
 
-        structured_llm = app.state.llm.with_structured_output(LoanUserInfo)
+        structured_llm = app.state.llm.with_structured_output(
+            LoanUserInfo, method="json_mode", include_raw=False
+        )
 
-        classifier_llm = app.state.llm.with_structured_output(ClassifierLoan)
+        classifier_llm = app.state.llm.with_structured_output(
+            ClassifierLoan, method="json_mode", include_raw=False
+        )
 
         prompt_extract = ChatPromptTemplate.from_messages(
             [("system", system_prompt_extract_LoanAgent), ("human", "{input}")]
@@ -129,9 +141,14 @@ async def lifespan(app: FastAPI):
         try:
             mcp_client = MCPClient(
                 server_configs={
-                    "loan_mcp": os.getenv("LOAN_MCP_URL", "http://localhost:8001/sse"),
+                    "loan_calc_mcp": os.getenv(
+                        "LOAN_CALC_MCP_URL", "http://localhost:8001/sse"
+                    ),
+                    "product_mcp": os.getenv(
+                        "PRODUCT_MCP_URL", "http://localhost:8002/sse"
+                    ),
                     "knowledge_mcp": os.getenv(
-                        "KNOWLEDGE_MCP_URL", "http://localhost:8002/sse"
+                        "KNOWLEDGE_MCP_URL", "http://localhost:8003/sse"
                     ),
                 }
             )
@@ -149,7 +166,7 @@ async def lifespan(app: FastAPI):
             mcp_client=mcp_client,
         )
 
-        result_builder = ResultBuilder()
+        result_builder = ResultBuilder(llm=app.state.llm)
 
         executor_service = ExecutorService(
             task_executor=task_executor,

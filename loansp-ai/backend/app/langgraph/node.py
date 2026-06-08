@@ -31,6 +31,7 @@ def extract_profile_node(ai_service, memory_service):
             "loan_year": extracted.loan_year,
             "loan_purpose": extracted.loan_purpose,
             "language": extracted.language,
+            "last_query": user_message,
         }
         profile = await memory_service.update_profile(state["session_id"], updates)
         return {"customer_profile": profile.model_dump()}
@@ -139,10 +140,30 @@ def ask_missing_node(memory_service):
 
 
 # Node 8 Executor
-def executor_node(executor_service):
+def executor_node(executor_service, ai_service):
     async def _node(state):
+        plan = state["plan"]
+        # Check if all tasks are general_response
+        tasks = plan.tasks if hasattr(plan, "tasks") else []
+        if tasks and all(
+            str(t.task) == "TaskType.GENERAL_RESPONSE"
+            or str(t.task) == "general_response"
+            for t in tasks
+        ):
+            # Use LLM for general response
+            response = await ai_service.conversation_chain.ainvoke(
+                {
+                    "input": state["messages"][-1].content,
+                    "chat_history": state["messages"][:-1],
+                }
+            )
+            return {
+                "execution_result": {"response": response, "results": []},
+                "messages": [AIMessage(content=response)],
+            }
+
         result = await executor_service.execute_plan(
-            plan=state["plan"],
+            plan=plan,
             customer_profile=state["customer_profile"],
         )
         return {

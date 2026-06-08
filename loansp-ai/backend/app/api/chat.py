@@ -4,6 +4,8 @@ from app.schemas.chat_schema import ChatRequest, ChatResponse
 from app.core.logging.log import logger
 from langchain_core.messages import HumanMessage
 
+import groq
+
 router = APIRouter()
 
 
@@ -33,6 +35,12 @@ async def chat(chat_request: ChatRequest, request: Request):
             processing_time=processing_time,
         )
 
+    except groq.AuthenticationError as e:
+        logger.error(f"Groq API key invalid: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="AI service unavailable: Invalid API key. Please set a valid GROQ_API key.",
+        )
     except Exception as e:
         logger.error(f"Error in chat endpoint: {e}")
         import traceback
